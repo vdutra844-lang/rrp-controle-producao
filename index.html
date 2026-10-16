@@ -5,6 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>RRP | Controle de Produção</title>
+
 <style>
 :root{
  font-family:Arial,system-ui,sans-serif;
@@ -55,7 +56,6 @@ button{
 }
 button:disabled{opacity:.5;cursor:wait}
 .secondary{background:#34465f}
-.danger{background:#963d47}
 .hidden{display:none!important}
 .grid{
  display:grid;
@@ -63,18 +63,6 @@ button:disabled{opacity:.5;cursor:wait}
  gap:12px
 }
 .stat{font-size:2rem;font-weight:800;color:#8dc2ff}
-.scroll{overflow-x:auto}
-table{
- width:100%;
- min-width:580px;
- border-collapse:collapse;
- font-size:.9rem
-}
-th,td{
- padding:11px;
- border-bottom:1px solid #40516b;
- text-align:left
-}
 #msg{
  white-space:pre-wrap;
  position:sticky;
@@ -211,9 +199,7 @@ Atualizar dados
 </div>
 </div>
 
-<p class="muted">
-Cada bandeja contém 126 recipientes.
-</p>
+<p class="muted">Cada bandeja contém 126 recipientes.</p>
 </section>
 
 <section id="cadastro" class="card hidden">
@@ -245,7 +231,7 @@ Registrar 1 bandeja + 126 recipientes
 <section class="card">
 <h2>Colaboradores</h2>
 <p class="muted">
-Clique no nome para visualizar a produção e os horários dos registros.
+Clique no nome para abrir ou fechar a produção e os horários.
 </p>
 
 <p id="statusTabela" class="muted">Carregando...</p>
@@ -581,13 +567,19 @@ function render(){
 
    button.append(left,right);
 
+   // ABRIR E FECHAR A GUIA AO CLICAR NO NOME
    button.onclick=()=>{
-    selectedId=String(p.id);
+    const id=String(p.id);
+
+    if(selectedId===id){
+     // Segundo clique no mesmo nome: fecha
+     selectedId=null;
+    }else{
+     // Clique em outro nome: abre o novo
+     selectedId=id;
+    }
+
     render();
-    $('detalheColaborador').scrollIntoView({
-     behavior:'smooth',
-     block:'nearest'
-    });
    };
 
    list.appendChild(button);
