@@ -6,40 +6,111 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>RRP | Controle de Produção</title>
 <style>
-:root{font-family:Arial,system-ui,sans-serif;color-scheme:dark}
+:root{
+ font-family:Arial,system-ui,sans-serif;
+ color-scheme:dark
+}
 *{box-sizing:border-box}
-body{margin:0;background:#0b1323;color:#edf3ff}
-header{padding:22px;background:#18283e;border-bottom:3px solid #3b82f6}
+body{
+ margin:0;
+ background:#0b1323;
+ color:#edf3ff
+}
+header{
+ padding:22px;
+ background:#18283e;
+ border-bottom:3px solid #3b82f6
+}
 h1{margin:0;font-size:1.5rem}
 header p,.muted{color:#b6c7de}
 main{max-width:1050px;margin:auto;padding:16px}
-.card{background:#19283e;border:1px solid #334a68;border-radius:14px;padding:18px;margin:14px 0}
+.card{
+ background:#19283e;
+ border:1px solid #334a68;
+ border-radius:14px;
+ padding:18px;
+ margin:14px 0
+}
 h2{font-size:1.15rem;margin-top:0}
 label{display:block;margin:12px 0 5px}
-input,button,select{font:inherit;border-radius:9px;padding:12px;width:100%}
-input,select{background:#0e1b2e;color:white;border:1px solid #526780}
-button{border:0;background:#3478f6;color:white;font-weight:700;margin-top:12px;cursor:pointer}
+input,button,select{
+ font:inherit;
+ border-radius:9px;
+ padding:12px;
+ width:100%
+}
+input,select{
+ background:#0e1b2e;
+ color:white;
+ border:1px solid #526780
+}
+input[readonly]{
+ background:#263b50;
+ color:#9ee6bb;
+ font-weight:bold;
+ cursor:not-allowed
+}
+button{
+ border:0;
+ background:#3478f6;
+ color:white;
+ font-weight:700;
+ margin-top:12px;
+ cursor:pointer
+}
 button:disabled{opacity:.5;cursor:wait}
 .secondary{background:#34465f}
 .danger{background:#963d47}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.grid{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+ gap:12px
+}
 .hidden{display:none!important}
-.stat{font-size:2rem;font-weight:800;color:#8dc2ff}
+.stat{
+ font-size:2rem;
+ font-weight:800;
+ color:#8dc2ff
+}
 .scroll{overflow:auto}
-table{width:100%;border-collapse:collapse;min-width:650px;font-size:.9rem}
-th,td{padding:10px;border-bottom:1px solid #40516b;text-align:left}
+table{
+ width:100%;
+ border-collapse:collapse;
+ min-width:650px;
+ font-size:.9rem
+}
+th,td{
+ padding:10px;
+ border-bottom:1px solid #40516b;
+ text-align:left
+}
 td button{padding:8px;margin:3px 0}
-#msg{white-space:pre-wrap;position:sticky;top:0;z-index:5}
+#msg{
+ white-space:pre-wrap;
+ position:sticky;
+ top:0;
+ z-index:5
+}
 .ok{color:#9ee6bb}
 .err{color:#ffadad}
+.info{
+ background:#102c40;
+ border-radius:10px;
+ padding:12px;
+ color:#bde0ff;
+ margin-top:12px
+}
 </style>
 </head>
 <body>
+
 <header>
 <h1>RRP • Controle de Produção Diária</h1>
 <p>Registro de bandejas e recipientes por colaborador</p>
 </header>
+
 <main>
+
 <div id="msg" class="card hidden" role="status"></div>
 
 <section id="login" class="card">
@@ -52,6 +123,7 @@ td button{padding:8px;margin:3px 0}
 </section>
 
 <div id="app" class="hidden">
+
 <section class="card">
 <strong id="usuario"></strong>
 <p id="perfil"></p>
@@ -60,270 +132,502 @@ td button{padding:8px;margin:3px 0}
 
 <section class="card">
 <h2>Produção diária</h2>
+
 <label>Data da produção (MS)</label>
 <input type="date" id="dia">
+
 <label>Buscar colaborador</label>
 <input id="busca" placeholder="Nome, NP ou cartão">
-<button id="atualizar" class="secondary">Atualizar dados</button>
+
+<button id="atualizar" class="secondary">
+Atualizar dados
+</button>
+
 <div class="grid">
-<div><p>Total de bandejas</p><div class="stat" id="totalB">0</div></div>
-<div><p>Total de recipientes</p><div class="stat" id="totalR">0</div></div>
+<div>
+<p>Total de bandejas</p>
+<div class="stat" id="totalB">0</div>
+</div>
+<div>
+<p>Total de recipientes</p>
+<div class="stat" id="totalR">0</div>
+</div>
 </div>
 </section>
 
 <section class="card hidden" id="cadastro">
 <h2>Cadastrar colaborador</h2>
+
 <label>Nome</label>
 <input id="nome" placeholder="Nome completo">
+
 <label>NP</label>
 <input id="np" placeholder="Número pessoal">
-<label>Cartão</label>
-<input id="cartao" placeholder="Número único">
-<button id="cadastrar">Cadastrar colaborador</button>
+
+<label>Cartão RFID</label>
+<input id="cartao" placeholder="Número único do cartão">
+
+<button id="cadastrar">
+Cadastrar colaborador
+</button>
 </section>
 
 <section class="card hidden" id="registro">
 <h2>Registrar leitura de cartão</h2>
+
 <label>Número do cartão</label>
-<input id="leitura" placeholder="Digite ou passe o cartão" autocomplete="off">
-<button id="registrar">Registrar 1 bandeja + 126 recipientes</button>
-<p class="muted">Cada registro confirmado adiciona 1 bandeja e 126 recipientes.</p>
+<input id="leitura"
+ placeholder="Digite ou passe o cartão"
+ autocomplete="off">
+
+<button id="registrar">
+Registrar 1 bandeja + 126 recipientes
+</button>
+
+<p class="muted">
+Cada leitura confirmada registra uma bandeja e 126 recipientes.
+</p>
 </section>
 
 <section class="card">
 <h2>Colaboradores e produção</h2>
+
 <div class="scroll">
 <table>
-<thead><tr>
-<th>Nome</th><th>NP</th><th>Cartão</th>
-<th>Bandejas</th><th>Recipientes</th><th>Ações</th>
-</tr></thead>
+<thead>
+<tr>
+<th>Nome</th>
+<th>NP</th>
+<th>Cartão</th>
+<th>Bandejas</th>
+<th>Recipientes</th>
+<th>Ações</th>
+</tr>
+</thead>
 <tbody id="linhas"></tbody>
 </table>
 </div>
 </section>
 
 <section class="card hidden" id="ajustes">
-<h2>Ajustar produção</h2>
+<h2>Corrigir produção</h2>
+
 <label>Colaborador</label>
 <select id="ajCol"></select>
-<label>Bandejas corrigidas</label>
-<input id="ajB" type="number" min="0" step="1">
-<label>Recipientes corrigidos</label>
-<input id="ajR" type="number" min="0" step="1">
-<label>Motivo do ajuste</label>
-<input id="motivo" placeholder="Justificativa obrigatória">
-<button id="salvarAj">Salvar ajuste</button>
+
+<label>Quantidade corrigida de bandejas</label>
+<input id="ajB"
+ type="number"
+ min="0"
+ step="1"
+ inputmode="numeric">
+
+<label>Recipientes (cálculo automático)</label>
+<input id="ajR"
+ type="number"
+ min="0"
+ step="1"
+ readonly>
+
+<div class="info">
+Cada bandeja contém 126 recipientes.
+O sistema calcula automaticamente a quantidade total.
+</div>
+
+<label>Motivo da correção</label>
+<input id="motivo"
+ placeholder="Justificativa obrigatória">
+
+<button id="salvarAj">
+Salvar correção
+</button>
 </section>
+
 </div>
 </main>
 
 <script type="module">
-import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-const SUPABASE_URL='https://rhezpvqaosuqmkwigbap.supabase.co';
-const SUPABASE_KEY='sb_publishable_V8CoyYyNgmH5RsytP3em8g_V1DZX54Q';
+import {createClient}
+from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const SUPABASE_URL=
+'https://rhezpvqaosuqmkwigbap.supabase.co';
+
+const SUPABASE_KEY=
+'sb_publishable_V8CoyYyNgmH5RsytP3em8g_V1DZX54Q';
+
 const db=createClient(SUPABASE_URL,SUPABASE_KEY);
+
 const $=id=>document.getElementById(id);
+
 const POR_BANDEJA=126;
 const TZ='America/Campo_Grande';
 
-let user=null,admin=false;
-let people=[],reads=[],adjustments=[],totals=new Map();
+let user=null;
+let admin=false;
+let people=[];
+let reads=[];
+let adjustments=[];
+let totals=new Map();
 let busy=false;
+
+const fmt=new Intl.NumberFormat('pt-BR');
 
 function message(txt,error=false){
  const m=$('msg');
  m.textContent=txt;
  m.className='card '+(error?'err':'ok');
 }
+
 function check(result){
  if(result.error)throw result.error;
  return result.data;
 }
+
 async function run(fn){
  if(busy)return;
  busy=true;
- try{await fn()}
- catch(e){message(e.message||String(e),true);console.error(e)}
- finally{busy=false}
+ try{
+  await fn();
+ }catch(e){
+  message(e.message||String(e),true);
+  console.error(e);
+ }finally{
+  busy=false;
+ }
 }
+
 function dateMS(){
- return new Intl.DateTimeFormat('en-CA',{
-  timeZone:TZ,year:'numeric',month:'2-digit',day:'2-digit'
- }).format(new Date());
+ const parts=new Intl.DateTimeFormat('en-US',{
+  timeZone:TZ,
+  year:'numeric',
+  month:'2-digit',
+  day:'2-digit'
+ }).formatToParts(new Date());
+
+ const get=type=>parts.find(p=>p.type===type).value;
+
+ return `${get('year')}-${get('month')}-${get('day')}`;
 }
+
 function escapeHtml(s){
  return String(s??'').replace(/[&<>"']/g,c=>({
- '&':'&amp;','<':'&lt;','>':'&gt;',
- '"':'&quot;',"'":'&#39;'
+  '&':'&amp;',
+  '<':'&lt;',
+  '>':'&gt;',
+  '"':'&quot;',
+  "'":'&#39;'
  }[c]));
 }
+
 function validCount(n){
  return Number.isSafeInteger(n)&&n>=0;
 }
+
 function nextDay(day){
  const d=new Date(day+'T12:00:00Z');
  d.setUTCDate(d.getUTCDate()+1);
  return d.toISOString().slice(0,10);
 }
+
 function dayBounds(day){
  const start=new Date(day+'T00:00:00-04:00');
  const end=new Date(nextDay(day)+'T00:00:00-04:00');
+
  return {
   start:start.toISOString(),
   end:end.toISOString()
  };
 }
+
 $('dia').value=dateMS();
 
 async function session(){
+
  const {data,error}=await db.auth.getUser();
- if(error&&error.name!=='AuthSessionMissingError')throw error;
+
+ if(error&&error.name!=='AuthSessionMissingError'){
+  throw error;
+ }
+
  user=data?.user||null;
+
  if(!user){
   admin=false;
   $('login').classList.remove('hidden');
   $('app').classList.add('hidden');
   return;
  }
- const a=check(await db.from('administradores')
-  .select('usuario_id').eq('usuario_id',user.id).maybeSingle());
+
+ const a=check(
+  await db.from('administradores')
+  .select('usuario_id')
+  .eq('usuario_id',user.id)
+  .maybeSingle()
+ );
+
  admin=!!a;
+
  $('login').classList.add('hidden');
  $('app').classList.remove('hidden');
+
  $('usuario').textContent=user.email||'Usuário';
- $('perfil').textContent=admin?'Administrador':'Usuário de consulta';
+
+ $('perfil').textContent=
+ admin?'Administrador':'Usuário de consulta';
+
  $('cadastro').classList.toggle('hidden',!admin);
  $('registro').classList.toggle('hidden',!admin);
  $('ajustes').classList.toggle('hidden',!admin);
+
  await refresh();
 }
 
 async function getAll(table,columns,start,end,timeColumn){
+
  let result=[];
  let offset=0;
  const pageSize=1000;
+
  while(true){
+
   let query=db.from(table).select(columns);
+
   if(timeColumn){
-   query=query.gte(timeColumn,start).lt(timeColumn,end);
+   query=query
+    .gte(timeColumn,start)
+    .lt(timeColumn,end);
   }
-  const page=check(await query
+
+  const page=check(
+   await query
    .order(timeColumn||'id',{ascending:true})
-   .range(offset,offset+pageSize-1));
+   .order('id',{ascending:true})
+   .range(offset,offset+pageSize-1)
+  );
+
   result.push(...page);
+
   if(page.length<pageSize)break;
+
   offset+=pageSize;
  }
+
  return result;
 }
 
 async function refresh(){
- people=check(await db.from('colaboradores')
+
+ people=check(
+  await db.from('colaboradores')
   .select('id,nome,np,cartao,ativo')
-  .eq('ativo',true).order('nome'));
+  .eq('ativo',true)
+  .order('nome')
+ );
+
  const {start,end}=dayBounds($('dia').value);
- reads=await getAll('leituras',
+
+ reads=await getAll(
+  'leituras',
   'id,colaborador_id,registrado_em',
-  start,end,'registrado_em');
- adjustments=await getAll('ajustes',
+  start,end,'registrado_em'
+ );
+
+ adjustments=await getAll(
+  'ajustes',
   'id,colaborador_id,bandejas_antes,bandejas_depois,recipientes_antes,recipientes_depois,criado_em',
-  start,end,'criado_em');
+  start,end,'criado_em'
+ );
+
  calc();
  render();
 }
 
 function calc(){
- totals=new Map(people.map(p=>[p.id,{b:0,r:0}]));
+
+ totals=new Map(
+  people.map(p=>[p.id,{b:0,r:0}])
+ );
+
  for(const l of reads){
+
   const t=totals.get(l.colaborador_id);
+
   if(t){
    t.b+=1;
    t.r+=POR_BANDEJA;
   }
  }
+
  for(const a of adjustments){
+
   const t=totals.get(a.colaborador_id);
+
   if(t){
-   t.b+=Number(a.bandejas_depois)-Number(a.bandejas_antes);
-   t.r+=Number(a.recipientes_depois)-Number(a.recipientes_antes);
+   t.b+=Number(a.bandejas_depois)
+       -Number(a.bandejas_antes);
+
+   t.r+=Number(a.recipientes_depois)
+       -Number(a.recipientes_antes);
   }
  }
 }
 
 function render(){
+
  const q=$('busca').value.toLowerCase().trim();
- const visible=people.filter(p=>[p.nome,p.np,p.cartao]
-  .some(v=>String(v??'').toLowerCase().includes(q)));
+
+ const visible=people.filter(p=>
+  [p.nome,p.np,p.cartao].some(v=>
+   String(v??'').toLowerCase().includes(q)
+  )
+ );
+
  $('linhas').innerHTML=visible.map(p=>{
+
   const t=totals.get(p.id)||{b:0,r:0};
-  return `<tr>
+
+  return `
+  <tr>
    <td>${escapeHtml(p.nome)}</td>
    <td>${escapeHtml(p.np)}</td>
    <td>${escapeHtml(p.cartao)}</td>
-   <td>${t.b}</td><td>${t.r}</td>
-   <td>${admin?`<button class="secondary" data-adjust="${p.id}">Editar</button>
-   <button class="danger" data-remove="${p.id}">Desativar</button>`:''}</td>
+   <td>${fmt.format(t.b)}</td>
+   <td>${fmt.format(t.r)}</td>
+   <td>
+    ${admin?`
+     <button class="secondary"
+      data-adjust="${p.id}">Editar</button>
+     <button class="danger"
+      data-remove="${p.id}">Desativar</button>
+    `:''}
+   </td>
   </tr>`;
- }).join('')||'<tr><td colspan="6">Nenhum colaborador encontrado.</td></tr>';
- $('totalB').textContent=people.reduce((s,p)=>s+(totals.get(p.id)?.b||0),0);
- $('totalR').textContent=people.reduce((s,p)=>s+(totals.get(p.id)?.r||0),0);
+ }).join('')||
+ '<tr><td colspan="6">Nenhum colaborador encontrado.</td></tr>';
+
+ const totalB=people.reduce(
+  (s,p)=>s+(totals.get(p.id)?.b||0),0
+ );
+
+ const totalR=people.reduce(
+  (s,p)=>s+(totals.get(p.id)?.r||0),0
+ );
+
+ $('totalB').textContent=fmt.format(totalB);
+ $('totalR').textContent=fmt.format(totalR);
+
+ const selected=$('ajCol').value;
+
  $('ajCol').innerHTML=people.map(p=>
-  `<option value="${p.id}">${escapeHtml(p.nome)}</option>`).join('');
+  `<option value="${p.id}">${escapeHtml(p.nome)}</option>`
+ ).join('');
+
+ if(people.some(p=>p.id===selected)){
+  $('ajCol').value=selected;
+ }
 }
 
 $('entrar').onclick=()=>run(async()=>{
+
  const {error}=await db.auth.signInWithPassword({
   email:$('email').value.trim(),
   password:$('senha').value
  });
+
  if(error)throw error;
+
  await session();
+
  message('Login realizado com sucesso');
 });
+
 $('sair').onclick=()=>run(async()=>{
+
  check(await db.auth.signOut());
+
  await session();
+
  message('Sessão encerrada');
 });
-$('atualizar').onclick=()=>run(refresh);
+
+$('atualizar').onclick=()=>run(async()=>{
+ await refresh();
+ message('Dados atualizados');
+});
+
 $('dia').onchange=()=>run(refresh);
+
 $('busca').oninput=render;
 
 $('cadastrar').onclick=()=>run(async()=>{
- if(!admin)throw Error('Sem permissão de administrador');
+
+ if(!admin)throw Error('Sem permissão');
+
  const nome=$('nome').value.trim();
  const np=$('np').value.trim();
  const cartao=$('cartao').value.trim();
- if(!nome||!np||!cartao)throw Error('Preencha nome, NP e cartão');
+
+ if(!nome||!np||!cartao){
+  throw Error('Preencha nome, NP e cartão');
+ }
+
  check(await db.from('colaboradores').insert({
-  nome,np,cartao,ativo:true
+  nome,
+  np,
+  cartao,
+  ativo:true
  }));
+
  $('nome').value='';
  $('np').value='';
  $('cartao').value='';
+
  await refresh();
+
  message('Colaborador cadastrado com sucesso');
 });
 
 $('registrar').onclick=()=>run(async()=>{
- if(!admin)throw Error('Sem permissão para registrar');
- if($('dia').value!==dateMS())
+
+ if(!admin){
+  throw Error('Sem permissão para registrar');
+ }
+
+ if($('dia').value!==dateMS()){
   throw Error('Leituras somente na data atual');
+ }
+
  const card=$('leitura').value.trim();
- if(!card)throw Error('Informe o número do cartão');
- const p=people.find(x=>String(x.cartao)===card);
- if(!p)throw Error('Cartão não encontrado. Cadastre o colaborador primeiro.');
+
+ if(!card){
+  throw Error('Informe o número do cartão');
+ }
+
+ const p=people.find(x=>
+  String(x.cartao)===card
+ );
+
+ if(!p){
+  throw Error('Cartão não encontrado');
+ }
+
  check(await db.from('leituras').insert({
   colaborador_id:p.id,
   cartao_lido:card,
   origem:'manual'
  }));
+
  $('leitura').value='';
+
  await refresh();
+
  $('leitura').focus();
- message('Registrada 1 bandeja + 126 recipientes para '+p.nome);
+
+ message(
+  'Registrada 1 bandeja + 126 recipientes para '+p.nome
+ );
 });
 
 $('leitura').addEventListener('keydown',e=>{
@@ -334,45 +638,124 @@ $('leitura').addEventListener('keydown',e=>{
 });
 
 $('linhas').onclick=e=>run(async()=>{
+
  if(!admin)return;
+
  const button=e.target.closest('button');
+
  if(!button)return;
- const id=button.dataset.adjust||button.dataset.remove;
+
+ const id=button.dataset.adjust||
+          button.dataset.remove;
+
  if(!id)return;
+
  const p=people.find(x=>x.id===id);
+
  if(!p)return;
+
  if(button.dataset.remove){
+
   if(!confirm('Desativar '+p.nome+'?'))return;
+
   check(await db.from('colaboradores')
-   .update({ativo:false}).eq('id',id));
+   .update({ativo:false})
+   .eq('id',id));
+
   await refresh();
+
   message('Colaborador desativado');
+
   return;
  }
+
  $('ajCol').value=id;
+
  fillAdjust();
- $('ajustes').scrollIntoView({behavior:'smooth'});
+
+ $('ajustes').scrollIntoView({
+  behavior:'smooth'
+ });
 });
 
-function fillAdjust(){
- const t=totals.get($('ajCol').value)||{b:0,r:0};
- $('ajB').value=t.b;
- $('ajR').value=t.r;
+function calcularRecipientes(){
+
+ const valor=$('ajB').value.trim();
+ const bandejas=Number(valor);
+ const recipientes=bandejas*POR_BANDEJA;
+
+ if(
+  valor===''||
+  !validCount(bandejas)||
+  !validCount(recipientes)
+ ){
+  $('ajR').value='';
+  return;
+ }
+
+ $('ajR').value=recipientes;
 }
+
+function fillAdjust(){
+
+ const t=totals.get($('ajCol').value)||
+ {b:0,r:0};
+
+ $('ajB').value=t.b;
+
+ // Sempre calcular a partir das bandejas.
+ calcularRecipientes();
+}
+
 $('ajCol').onchange=fillAdjust;
 
+$('ajB').addEventListener(
+ 'input',
+ calcularRecipientes
+);
+
 $('salvarAj').onclick=()=>run(async()=>{
- if(!admin)throw Error('Sem permissão');
- if($('dia').value!==dateMS())
+
+ if(!admin){
+  throw Error('Sem permissão');
+ }
+
+ if($('dia').value!==dateMS()){
   throw Error('Ajustes somente na data atual');
+ }
+
  const id=$('ajCol').value;
+
  const t=totals.get(id);
- if(!t)throw Error('Selecione um colaborador');
- const b=Number($('ajB').value);
- const r=Number($('ajR').value);
+
+ if(!t){
+  throw Error('Selecione um colaborador');
+ }
+
+ const valor=$('ajB').value.trim();
+
+ if(valor===''){
+  throw Error('Informe a quantidade de bandejas');
+ }
+
+ const b=Number(valor);
+
+ // Cálculo obrigatório e automático.
+ const r=b*POR_BANDEJA;
+
  const motivo=$('motivo').value.trim();
- if(!validCount(b)||!validCount(r)||!motivo)
-  throw Error('Informe quantidades válidas e o motivo');
+
+ if(!validCount(b)||!validCount(r)){
+  throw Error('Quantidade de bandejas inválida');
+ }
+
+ if(!motivo){
+  throw Error('Informe o motivo da correção');
+ }
+
+ // O usuário não pode modificar os recipientes.
+ $('ajR').value=r;
+
  check(await db.from('ajustes').insert({
   colaborador_id:id,
   usuario_id:user.id,
@@ -382,12 +765,19 @@ $('salvarAj').onclick=()=>run(async()=>{
   recipientes_depois:r,
   motivo
  }));
+
  $('motivo').value='';
+
  await refresh();
- message('Ajuste registrado com sucesso');
+
+ message(
+  'Correção salva: '+fmt.format(b)+
+  ' bandejas e '+fmt.format(r)+' recipientes.'
+ );
 });
 
 run(session);
+
 </script>
 </body>
 </html>
