@@ -12,7 +12,7 @@ body{margin:0;background:#0b1323;color:#edf3ff}
 header{padding:22px;background:#18283e;border-bottom:3px solid #3b82f6}
 h1{margin:0;font-size:1.5rem}
 header p,.muted{color:#b6c7de}
-main{max-width:1000px;margin:auto;padding:16px}
+main{max-width:1050px;margin:auto;padding:16px}
 .card{background:#19283e;border:1px solid #334a68;border-radius:14px;padding:18px;margin:14px 0}
 h2{font-size:1.15rem;margin-top:0}
 label{display:block;margin:12px 0 5px}
@@ -60,7 +60,7 @@ td button{padding:8px;margin:3px 0}
 
 <section class="card">
 <h2>Produção diária</h2>
-<label>Data da produção</label>
+<label>Data da produção (MS)</label>
 <input type="date" id="dia">
 <label>Buscar colaborador</label>
 <input id="busca" placeholder="Nome, NP ou cartão">
@@ -87,19 +87,17 @@ td button{padding:8px;margin:3px 0}
 <label>Número do cartão</label>
 <input id="leitura" placeholder="Digite ou passe o cartão" autocomplete="off">
 <button id="registrar">Registrar 1 bandeja + 126 recipientes</button>
-<p class="muted">Cada registro confirmado adiciona 1 bandeja e 126 recipientes. Integração física do leitor será feita posteriormente.</p>
+<p class="muted">Cada registro confirmado adiciona 1 bandeja e 126 recipientes.</p>
 </section>
 
 <section class="card">
 <h2>Colaboradores e produção</h2>
 <div class="scroll">
 <table>
-<thead>
-<tr>
+<thead><tr>
 <th>Nome</th><th>NP</th><th>Cartão</th>
 <th>Bandejas</th><th>Recipientes</th><th>Ações</th>
-</tr>
-</thead>
+</tr></thead>
 <tbody id="linhas"></tbody>
 </table>
 </div>
@@ -128,6 +126,7 @@ const SUPABASE_KEY='sb_publishable_V8CoyYyNgmH5RsytP3em8g_V1DZX54Q';
 const db=createClient(SUPABASE_URL,SUPABASE_KEY);
 const $=id=>document.getElementById(id);
 const POR_BANDEJA=126;
+const TZ='America/Campo_Grande';
 
 let user=null,admin=false;
 let people=[],reads=[],adjustments=[],totals=new Map();
@@ -149,9 +148,10 @@ async function run(fn){
  catch(e){message(e.message||String(e),true);console.error(e)}
  finally{busy=false}
 }
-function today(){
- const d=new Date();
- return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
+function dateMS(){
+ return new Intl.DateTimeFormat('en-CA',{
+  timeZone:TZ,year:'numeric',month:'2-digit',day:'2-digit'
+ }).format(new Date());
 }
 function escapeHtml(s){
  return String(s??'').replace(/[&<>"']/g,c=>({
@@ -163,18 +163,19 @@ function validCount(n){
  return Number.isSafeInteger(n)&&n>=0;
 }
 function nextDay(day){
- const d=new Date(day+'T12:00:00');
- d.setDate(d.getDate()+1);
- return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
+ const d=new Date(day+'T12:00:00Z');
+ d.setUTCDate(d.getUTCDate()+1);
+ return d.toISOString().slice(0,10);
 }
 function dayBounds(day){
- // Os limites são convertidos para UTC usando o fuso do navegador.
+ const start=new Date(day+'T00:00:00-04:00');
+ const end=new Date(nextDay(day)+'T00:00:00-04:00');
  return {
-  start:new Date(day+'T00:00:00').toISOString(),
-  end:new Date(nextDay(day)+'T00:00:00').toISOString()
+  start:start.toISOString(),
+  end:end.toISOString()
  };
 }
-$('dia').value=today();
+$('dia').value=dateMS();
 
 async function session(){
  const {data,error}=await db.auth.getUser();
@@ -208,7 +209,9 @@ async function getAll(table,columns,start,end,timeColumn){
   if(timeColumn){
    query=query.gte(timeColumn,start).lt(timeColumn,end);
   }
-  const page=check(await query.range(offset,offset+pageSize-1));
+  const page=check(await query
+   .order(timeColumn||'id',{ascending:true})
+   .range(offset,offset+pageSize-1));
   result.push(...page);
   if(page.length<pageSize)break;
   offset+=pageSize;
@@ -259,8 +262,7 @@ function render(){
    <td>${escapeHtml(p.nome)}</td>
    <td>${escapeHtml(p.np)}</td>
    <td>${escapeHtml(p.cartao)}</td>
-   <td>${t.b}</td>
-   <td>${t.r}</td>
+   <td>${t.b}</td><td>${t.r}</td>
    <td>${admin?`<button class="secondary" data-adjust="${p.id}">Editar</button>
    <button class="danger" data-remove="${p.id}">Desativar</button>`:''}</td>
   </tr>`;
@@ -280,13 +282,11 @@ $('entrar').onclick=()=>run(async()=>{
  await session();
  message('Login realizado com sucesso');
 });
-
 $('sair').onclick=()=>run(async()=>{
  check(await db.auth.signOut());
  await session();
  message('Sessão encerrada');
 });
-
 $('atualizar').onclick=()=>run(refresh);
 $('dia').onchange=()=>run(refresh);
 $('busca').oninput=render;
@@ -309,21 +309,17 @@ $('cadastrar').onclick=()=>run(async()=>{
 
 $('registrar').onclick=()=>run(async()=>{
  if(!admin)throw Error('Sem permissão para registrar');
- if($('dia').value!==today())
+ if($('dia').value!==dateMS())
   throw Error('Leituras somente na data atual');
-
  const card=$('leitura').value.trim();
  if(!card)throw Error('Informe o número do cartão');
  const p=people.find(x=>String(x.cartao)===card);
  if(!p)throw Error('Cartão não encontrado. Cadastre o colaborador primeiro.');
-
- const result=await db.from('leituras').insert({
+ check(await db.from('leituras').insert({
   colaborador_id:p.id,
   cartao_lido:card,
   origem:'manual'
- });
- check(result);
-
+ }));
  $('leitura').value='';
  await refresh();
  $('leitura').focus();
@@ -345,7 +341,6 @@ $('linhas').onclick=e=>run(async()=>{
  if(!id)return;
  const p=people.find(x=>x.id===id);
  if(!p)return;
-
  if(button.dataset.remove){
   if(!confirm('Desativar '+p.nome+'?'))return;
   check(await db.from('colaboradores')
@@ -368,7 +363,7 @@ $('ajCol').onchange=fillAdjust;
 
 $('salvarAj').onclick=()=>run(async()=>{
  if(!admin)throw Error('Sem permissão');
- if($('dia').value!==today())
+ if($('dia').value!==dateMS())
   throw Error('Ajustes somente na data atual');
  const id=$('ajCol').value;
  const t=totals.get(id);
@@ -378,7 +373,6 @@ $('salvarAj').onclick=()=>run(async()=>{
  const motivo=$('motivo').value.trim();
  if(!validCount(b)||!validCount(r)||!motivo)
   throw Error('Informe quantidades válidas e o motivo');
-
  check(await db.from('ajustes').insert({
   colaborador_id:id,
   usuario_id:user.id,
