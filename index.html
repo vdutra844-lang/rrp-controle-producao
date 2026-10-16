@@ -1,63 +1,172 @@
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>RRP | Controle de Produção</title>
 <style>
-:root{font-family:Arial,system-ui,sans-serif;color-scheme:dark}
+:root{
+ font-family:Arial,system-ui,sans-serif;
+ color-scheme:dark
+}
 *{box-sizing:border-box}
 body{margin:0;background:#0b1323;color:#edf3ff}
-header{background:#18283e;border-bottom:3px solid #3b82f6;padding:22px}
+header{
+ background:#18283e;
+ border-bottom:3px solid #3b82f6;
+ padding:22px
+}
 h1{margin:0;font-size:1.5rem}
 header p,.muted{color:#b6c7de}
 main{max-width:1100px;margin:auto;padding:16px}
-.card{background:#19283e;border:1px solid #334a68;border-radius:14px;padding:18px;margin:14px 0}
+.card{
+ background:#19283e;
+ border:1px solid #334a68;
+ border-radius:14px;
+ padding:18px;
+ margin:14px 0
+}
 h2{font-size:1.15rem;margin:0 0 12px}
 label{display:block;margin:12px 0 5px}
-input,button,select{font:inherit;border-radius:9px;padding:12px;width:100%}
-input,select{background:#0e1b2e;color:white;border:1px solid #526780}
-input[readonly]{background:#263b50;color:#9ee6bb;font-weight:bold}
-button{border:0;background:#3478f6;color:white;font-weight:700;margin-top:12px;cursor:pointer}
+input,button,select{
+ font:inherit;
+ border-radius:9px;
+ padding:12px;
+ width:100%
+}
+input,select{
+ background:#0e1b2e;
+ color:white;
+ border:1px solid #526780
+}
+input[readonly]{
+ background:#263b50;
+ color:#9ee6bb;
+ font-weight:bold
+}
+button{
+ border:0;
+ background:#3478f6;
+ color:white;
+ font-weight:700;
+ margin-top:12px;
+ cursor:pointer
+}
 button:disabled{opacity:.5;cursor:wait}
 .secondary{background:#34465f}
 .danger{background:#963d47}
 .hidden{display:none!important}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.grid{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+ gap:12px
+}
 .stat{font-size:2rem;font-weight:800;color:#8dc2ff}
 .scroll{overflow-x:auto}
-table{width:100%;min-width:650px;border-collapse:collapse;font-size:.9rem}
-th,td{padding:11px;border-bottom:1px solid #40516b;text-align:left}
-td button{padding:8px;margin:3px 0}
-#msg{white-space:pre-wrap;position:sticky;top:0;z-index:5}
+table{
+ width:100%;
+ min-width:580px;
+ border-collapse:collapse;
+ font-size:.9rem
+}
+th,td{
+ padding:11px;
+ border-bottom:1px solid #40516b;
+ text-align:left
+}
+#msg{
+ white-space:pre-wrap;
+ position:sticky;
+ top:0;
+ z-index:5
+}
 .ok{color:#9ee6bb}
 .err{color:#ffadad}
-.info{background:#102c40;border-radius:10px;padding:12px;color:#bde0ff;margin-top:12px}
-.search-status{margin:12px 0;color:#bde0ff}
-.ranking-item{padding:13px 0;border-bottom:1px solid #334a68}
-.ranking-head{display:flex;justify-content:space-between;gap:12px;margin-bottom:9px}
-.ranking-name{font-weight:700;overflow-wrap:anywhere}
-.ranking-count{color:#9fd2ff;font-weight:700}
-.ranking-track{height:18px;background:#0e1b2e;border-radius:20px;overflow:hidden}
-.ranking-bar{height:100%;background:linear-gradient(90deg,#2563eb,#60a5fa);border-radius:20px}
-.ranking-item:first-child .ranking-bar{background:linear-gradient(90deg,#eab308,#facc15)}
-.ranking-item:nth-child(2) .ranking-bar{background:linear-gradient(90deg,#64748b,#cbd5e1)}
-.ranking-item:nth-child(3) .ranking-bar{background:linear-gradient(90deg,#b45309,#f59e0b)}
-.ranking-detail{margin-top:6px;color:#b6c7de;font-size:.85rem}
-.ranking-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:15px 0}
-.ranking-summary div{background:#102338;padding:13px;border-radius:10px}
-.ranking-summary strong{display:block;margin-top:5px;font-size:1.3rem}
+.info{
+ background:#102c40;
+ border-radius:10px;
+ padding:12px;
+ color:#bde0ff;
+ margin-top:12px
+}
+.colaborador{
+ width:100%;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ text-align:left;
+ background:#102338;
+ border:1px solid #40516b;
+ padding:15px;
+ border-radius:10px;
+ margin:8px 0
+}
+.colaborador:hover,.colaborador.selecionado{
+ background:#21436a;
+ border-color:#60a5fa
+}
+.colaborador small{
+ display:block;
+ color:#b6c7de;
+ margin-top:5px
+}
+.colaborador .quantidade{
+ color:#9fd2ff;
+ font-weight:700;
+ white-space:nowrap
+}
+.detalhe{
+ background:#102338;
+ border:1px solid #456387;
+ padding:15px;
+ border-radius:12px;
+ margin-top:15px
+}
+.registro{
+ display:flex;
+ justify-content:space-between;
+ gap:12px;
+ border-bottom:1px solid #334a68;
+ padding:12px 0
+}
+.registro strong{color:#9fd2ff}
+.ranking-item{
+ padding:13px 0;
+ border-bottom:1px solid #334a68
+}
+.ranking-head{
+ display:flex;
+ justify-content:space-between;
+ gap:12px;
+ margin-bottom:9px
+}
+.ranking-track{
+ height:18px;
+ background:#0e1b2e;
+ border-radius:20px;
+ overflow:hidden
+}
+.ranking-bar{
+ height:100%;
+ background:linear-gradient(90deg,#2563eb,#60a5fa);
+ border-radius:20px
+}
+.ranking-detail{
+ margin-top:6px;
+ color:#b6c7de;
+ font-size:.85rem
+}
 @media(max-width:520px){
- .ranking-head{align-items:flex-start;flex-direction:column}
+ .ranking-head{flex-direction:column}
 }
 </style>
 </head>
-<body>
 
+<body>
 <header>
 <h1>RRP • Controle de Produção Diária</h1>
-<p>Controle de bandejas e recipientes por colaborador</p>
+<p>Bandejas, recipientes e horários de produção</p>
 </header>
 
 <main>
@@ -84,18 +193,12 @@ td button{padding:8px;margin:3px 0}
 <section class="card">
 <h2>Produção diária</h2>
 
-<label for="dia">Data da produção (MS)</label>
+<label for="dia">Data da produção</label>
 <input id="dia" type="date">
 
-<label for="busca">Buscar colaborador</label>
-<input id="busca" type="search"
- placeholder="Digite nome, NP ou cartão"
- autocomplete="off">
-
-<button id="limparBusca" class="secondary">Limpar pesquisa</button>
-<button id="atualizar" class="secondary">Atualizar dados</button>
-
-<p id="resultadoBusca" class="search-status"></p>
+<button id="atualizar" class="secondary">
+Atualizar dados
+</button>
 
 <div class="grid">
 <div>
@@ -107,7 +210,10 @@ td button{padding:8px;margin:3px 0}
 <div class="stat" id="totalR">0</div>
 </div>
 </div>
-<p class="muted">Totais de todos os colaboradores ativos na data selecionada.</p>
+
+<p class="muted">
+Cada bandeja contém 126 recipientes.
+</p>
 </section>
 
 <section id="cadastro" class="card hidden">
@@ -126,57 +232,51 @@ td button{padding:8px;margin:3px 0}
 </section>
 
 <section id="registro" class="card hidden">
-<h2>Registrar leitura de cartão</h2>
+<h2>Registrar bandeja pelo cartão</h2>
 
-<label for="leitura">Número do cartão</label>
-<input id="leitura" placeholder="Digite ou passe o cartão"
- autocomplete="off">
+<label for="leitura">Número do cartão RFID</label>
+<input id="leitura" placeholder="Digite ou passe o cartão">
 
-<button id="registrar">Registrar 1 bandeja + 126 recipientes</button>
+<button id="registrar">
+Registrar 1 bandeja + 126 recipientes
+</button>
 </section>
 
 <section class="card">
-<h2>Colaboradores e produção</h2>
-<p id="statusTabela" class="muted">Aguardando carregamento...</p>
+<h2>Colaboradores</h2>
+<p class="muted">
+Clique no nome para visualizar a produção e os horários dos registros.
+</p>
 
-<div class="scroll">
-<table>
-<thead>
-<tr>
-<th>Nome</th>
-<th>NP</th>
-<th>Cartão</th>
-<th>Bandejas</th>
-<th>Recipientes</th>
-<th>Ações</th>
-</tr>
-</thead>
-<tbody id="linhas">
-<tr><td colspan="6">Carregando...</td></tr>
-</tbody>
-</table>
+<p id="statusTabela" class="muted">Carregando...</p>
+
+<div id="listaColaboradores"></div>
+
+<div id="detalheColaborador" class="detalhe hidden">
+<h2 id="detalheNome">Colaborador</h2>
+<p id="detalheNP" class="muted"></p>
+
+<div class="grid">
+<div>
+<p>Bandejas do dia</p>
+<div class="stat" id="detalheB">0</div>
+</div>
+<div>
+<p>Recipientes do dia</p>
+<div class="stat" id="detalheR">0</div>
+</div>
+</div>
+
+<h2 style="margin-top:24px">Horários dos registros</h2>
+<div id="horarios"></div>
 </div>
 </section>
 
 <section class="card">
-<h2>🏆 Ranking de produção diária</h2>
-<p class="muted">Classificação do maior para o menor, conforme a data selecionada.</p>
-
-<div class="ranking-summary">
-<div>
-<span>Colaboradores exibidos</span>
-<strong id="rankingPessoas">0</strong>
-</div>
-<div>
-<span>Maior produção</span>
-<strong id="rankingMaior">0</strong>
-</div>
-<div>
-<span>Média de bandejas</span>
-<strong id="rankingMedia">0</strong>
-</div>
-</div>
-
+<h2>🏆 Ranking diário</h2>
+<p class="muted">
+Do colaborador com mais bandejas para o com menos.
+</p>
 <div id="rankingLista"></div>
 </section>
 
@@ -186,15 +286,14 @@ td button{padding:8px;margin:3px 0}
 <label for="ajCol">Colaborador</label>
 <select id="ajCol"></select>
 
-<label for="ajB">Quantidade corrigida de bandejas</label>
+<label for="ajB">Quantidade de bandejas</label>
 <input id="ajB" type="number" min="0" step="1">
 
 <label for="ajR">Recipientes automáticos</label>
 <input id="ajR" type="number" readonly>
 
 <div class="info">
-Cada bandeja contém exatamente 126 recipientes.
-Basta alterar a quantidade de bandejas.
+Ao alterar as bandejas, os recipientes são calculados automaticamente.
 </div>
 
 <label for="motivo">Motivo da correção</label>
@@ -226,8 +325,10 @@ let people=[];
 let reads=[];
 let adjustments=[];
 let totals=new Map();
+let selectedId=null;
 let busy=false;
 let refreshing=false;
+let productionLoaded=false;
 
 function message(text,error=false){
  const m=$('msg');
@@ -251,24 +352,6 @@ async function run(fn){
  }finally{
   busy=false;
  }
-}
-
-function escapeHtml(value){
- return String(value??'').replace(/[&<>"']/g,c=>({
-  '&':'&amp;',
-  '<':'&lt;',
-  '>':'&gt;',
-  '"':'&quot;',
-  "'":'&#39;'
- }[c]));
-}
-
-function normalizar(value){
- return String(value??'')
-  .normalize('NFD')
-  .replace(/[\u0300-\u036f]/g,'')
-  .toLowerCase()
-  .trim();
 }
 
 function validCount(n){
@@ -301,6 +384,16 @@ function dayBounds(day){
  };
 }
 
+function horaMS(value){
+ return new Intl.DateTimeFormat('pt-BR',{
+  timeZone:TZ,
+  hour:'2-digit',
+  minute:'2-digit',
+  second:'2-digit',
+  hour12:false
+ }).format(new Date(value));
+}
+
 $('dia').value=dateMS();
 
 async function getAll(table,columns,start,end,timeColumn){
@@ -309,16 +402,12 @@ async function getAll(table,columns,start,end,timeColumn){
  const size=1000;
 
  while(true){
-  let query=db.from(table).select(columns);
-
-  if(timeColumn){
-   query=query.gte(timeColumn,start).lt(timeColumn,end);
-  }
-
   const page=check(
-   await query
-    .order(timeColumn||'id',{ascending:true})
-    .order('id',{ascending:true})
+   await db.from(table)
+    .select(columns)
+    .gte(timeColumn,start)
+    .lt(timeColumn,end)
+    .order(timeColumn,{ascending:true})
     .range(offset,offset+size-1)
   );
 
@@ -372,13 +461,12 @@ async function session(){
 async function refresh(){
  if(refreshing)return;
  refreshing=true;
+ productionLoaded=false;
 
- $('statusTabela').textContent='Atualizando colaboradores...';
+ const selectedDay=$('dia').value;
+ $('statusTabela').textContent='Carregando colaboradores...';
 
  try{
-  const selectedDay=$('dia').value;
-
-  // Consulta os colaboradores ativos.
   const newPeople=check(
    await db.from('colaboradores')
     .select('id,nome,np,cartao,ativo')
@@ -386,11 +474,12 @@ async function refresh(){
     .order('nome')
   );
 
-  console.log('RRP - colaboradores retornados:',newPeople);
-
-  // Mostra os colaboradores imediatamente,
-  // mesmo antes de terminar a consulta da produção.
   people=newPeople;
+
+  if(!people.some(p=>String(p.id)===selectedId)){
+   selectedId=null;
+  }
+
   reads=[];
   adjustments=[];
   calc();
@@ -414,13 +503,14 @@ async function refresh(){
 
   reads=newReads;
   adjustments=newAdjustments;
+  productionLoaded=true;
 
   calc();
   render();
 
  }catch(e){
   $('statusTabela').textContent=
-   'Erro ao carregar dados: '+(e.message||String(e));
+   'Falha ao carregar dados: '+(e.message||String(e));
   throw e;
  }finally{
   refreshing=false;
@@ -451,90 +541,60 @@ function calc(){
  }
 }
 
-function getFiltered(){
- const query=normalizar($('busca').value);
-
- if(!query)return [...people];
-
- const terms=query.split(/\s+/).filter(Boolean);
-
- return people.filter(p=>{
-  const searchText=normalizar(
-   [p.nome,p.np,p.cartao].join(' ')
-  );
-
-  return terms.every(term=>searchText.includes(term));
- });
+function makeText(tag,text,className=''){
+ const el=document.createElement(tag);
+ el.textContent=String(text??'');
+ if(className)el.className=className;
+ return el;
 }
 
 function render(){
- const visible=getFiltered();
-
- $('resultadoBusca').textContent=
-  `${visible.length} encontrado(s) de ${people.length} colaborador(es) ativo(s).`;
+ const list=$('listaColaboradores');
+ list.replaceChildren();
 
  $('statusTabela').textContent=
-  `Colaboradores carregados: ${people.length} | Exibidos: ${visible.length}`;
+  `${people.length} colaborador(es) ativo(s) cadastrado(s).`+
+  (productionLoaded?' Produção atualizada.':' Carregando produção...');
 
- const tbody=$('linhas');
-
- // Cria as linhas diretamente na tabela,
- // sem depender de HTML montado em uma única string.
- tbody.replaceChildren();
-
- if(visible.length===0){
-  const tr=document.createElement('tr');
-  const td=document.createElement('td');
-  td.colSpan=6;
-
-  td.textContent=people.length===0
-   ?'Nenhum colaborador ativo foi retornado pelo Supabase.'
-   :'Nenhum colaborador corresponde à pesquisa. Clique em Limpar pesquisa.';
-
-  tr.appendChild(td);
-  tbody.appendChild(tr);
+ if(people.length===0){
+  list.appendChild(
+   makeText('p','Nenhum colaborador ativo encontrado.','muted')
+  );
  }else{
-  for(const p of visible){
+  for(const p of people){
    const t=totals.get(String(p.id))||{b:0,r:0};
 
-   const tr=document.createElement('tr');
+   const button=document.createElement('button');
+   button.type='button';
+   button.className='colaborador'+
+    (String(p.id)===selectedId?' selecionado':'');
 
-   const values=[
-    p.nome??'',
-    p.np??'',
-    p.cartao??'',
-    fmt.format(t.b),
-    fmt.format(t.r)
-   ];
+   const left=document.createElement('span');
+   left.appendChild(makeText('strong',p.nome));
+   left.appendChild(makeText('small','NP: '+(p.np??'')));
 
-   for(const value of values){
-    const td=document.createElement('td');
-    td.textContent=String(value);
-    tr.appendChild(td);
-   }
+   const right=makeText(
+    'span',
+    productionLoaded?fmt.format(t.b)+' bandejas':'...',
+    'quantidade'
+   );
 
-   const actions=document.createElement('td');
+   button.append(left,right);
 
-   if(admin){
-    const edit=document.createElement('button');
-    edit.textContent='Editar';
-    edit.className='secondary';
-    edit.dataset.adjust=String(p.id);
+   button.onclick=()=>{
+    selectedId=String(p.id);
+    render();
+    $('detalheColaborador').scrollIntoView({
+     behavior:'smooth',
+     block:'nearest'
+    });
+   };
 
-    const remove=document.createElement('button');
-    remove.textContent='Desativar';
-    remove.className='danger';
-    remove.dataset.remove=String(p.id);
-
-    actions.append(edit,remove);
-   }else{
-    actions.textContent='—';
-   }
-
-   tr.appendChild(actions);
-   tbody.appendChild(tr);
+   list.appendChild(button);
   }
  }
+
+ renderDetail();
 
  const totalB=people.reduce(
   (s,p)=>s+(totals.get(String(p.id))?.b||0),0
@@ -544,11 +604,13 @@ function render(){
   (s,p)=>s+(totals.get(String(p.id))?.r||0),0
  );
 
- $('totalB').textContent=fmt.format(totalB);
- $('totalR').textContent=fmt.format(totalR);
+ $('totalB').textContent=
+  productionLoaded?fmt.format(totalB):'...';
+
+ $('totalR').textContent=
+  productionLoaded?fmt.format(totalR):'...';
 
  const selected=$('ajCol').value;
-
  $('ajCol').replaceChildren();
 
  for(const p of people){
@@ -562,16 +624,112 @@ function render(){
   $('ajCol').value=selected;
  }
 
- renderRanking(visible);
+ renderRanking();
 }
 
-function renderRanking(visible){
- const ranking=visible.map(p=>{
+function renderDetail(){
+ const panel=$('detalheColaborador');
+ const p=people.find(x=>String(x.id)===selectedId);
+
+ if(!p){
+  panel.classList.add('hidden');
+  return;
+ }
+
+ panel.classList.remove('hidden');
+
+ const t=totals.get(String(p.id))||{b:0,r:0};
+
+ $('detalheNome').textContent=p.nome;
+ $('detalheNP').textContent='NP: '+(p.np??'');
+
+ $('detalheB').textContent=
+  productionLoaded?fmt.format(t.b):'...';
+
+ $('detalheR').textContent=
+  productionLoaded?fmt.format(t.r):'...';
+
+ const area=$('horarios');
+ area.replaceChildren();
+
+ if(!productionLoaded){
+  area.appendChild(
+   makeText('p','Carregando os horários...','muted')
+  );
+  return;
+ }
+
+ const registros=reads
+  .filter(l=>String(l.colaborador_id)===selectedId)
+  .sort((a,b)=>new Date(a.registrado_em)-new Date(b.registrado_em));
+
+ if(registros.length===0){
+  area.appendChild(
+   makeText('p','Nenhuma leitura de bandeja nesta data.','muted')
+  );
+ }else{
+  registros.forEach((l,index)=>{
+   const row=document.createElement('div');
+   row.className='registro';
+
+   row.appendChild(
+    makeText('span',(index+1)+'ª bandeja')
+   );
+
+   row.appendChild(
+    makeText('strong',horaMS(l.registrado_em))
+   );
+
+   area.appendChild(row);
+  });
+ }
+
+ const changes=adjustments.filter(
+  a=>String(a.colaborador_id)===selectedId
+ );
+
+ if(changes.length){
+  area.appendChild(
+   makeText('h3','Correções realizadas no dia')
+  );
+
+  for(const a of changes){
+   const row=document.createElement('div');
+   row.className='registro';
+
+   row.appendChild(
+    makeText(
+     'span',
+     fmt.format(a.bandejas_antes)+
+     ' → '+fmt.format(a.bandejas_depois)+' bandejas'
+    )
+   );
+
+   row.appendChild(
+    makeText('strong',horaMS(a.criado_em))
+   );
+
+   area.appendChild(row);
+  }
+ }
+}
+
+function renderRanking(){
+ const list=$('rankingLista');
+ list.replaceChildren();
+
+ if(!productionLoaded){
+  list.appendChild(
+   makeText('p','Carregando ranking...','muted')
+  );
+  return;
+ }
+
+ const ranking=people.map(p=>{
   const t=totals.get(String(p.id))||{b:0,r:0};
 
   return {
    nome:String(p.nome??''),
-   np:String(p.np??''),
    b:t.b,
    r:t.r
   };
@@ -579,50 +737,52 @@ function renderRanking(visible){
   a.nome.localeCompare(b.nome,'pt-BR')
  );
 
- const maior=Math.max(0,...ranking.map(p=>p.b));
- const soma=ranking.reduce((s,p)=>s+p.b,0);
- const media=ranking.length?soma/ranking.length:0;
-
- $('rankingPessoas').textContent=fmt.format(ranking.length);
- $('rankingMaior').textContent=fmt.format(maior);
- $('rankingMedia').textContent=media.toLocaleString('pt-BR',{
-  maximumFractionDigits:1
- });
-
- const list=$('rankingLista');
-
  if(!ranking.length){
-  list.innerHTML='<p class="muted">Nenhum colaborador para exibir.</p>';
+  list.appendChild(
+   makeText('p','Nenhum colaborador para classificar.','muted')
+  );
   return;
  }
 
- list.innerHTML=ranking.map((p,i)=>{
-  const pct=maior>0?p.b/maior*100:0;
+ const maior=Math.max(0,...ranking.map(p=>p.b));
+
+ ranking.forEach((p,i)=>{
+  const item=document.createElement('div');
+  item.className='ranking-item';
+
+  const head=document.createElement('div');
+  head.className='ranking-head';
 
   const pos=i===0?'🥇':
    i===1?'🥈':
-   i===2?'🥉':`${i+1}º`;
+   i===2?'🥉':(i+1)+'º';
 
-  return `
-   <div class="ranking-item">
-    <div class="ranking-head">
-     <span class="ranking-name">
-      ${pos} ${escapeHtml(p.nome)}
-     </span>
-     <span class="ranking-count">
-      ${fmt.format(p.b)} bandejas
-     </span>
-    </div>
-    <div class="ranking-track">
-     <div class="ranking-bar" style="width:${pct}%"></div>
-    </div>
-    <div class="ranking-detail">
-     NP: ${escapeHtml(p.np)}
-     • ${fmt.format(p.r)} recipientes
-    </div>
-   </div>
-  `;
- }).join('');
+  head.appendChild(
+   makeText('strong',pos+' '+p.nome)
+  );
+
+  head.appendChild(
+   makeText('strong',fmt.format(p.b)+' bandejas')
+  );
+
+  const track=document.createElement('div');
+  track.className='ranking-track';
+
+  const bar=document.createElement('div');
+  bar.className='ranking-bar';
+  bar.style.width=(maior>0?p.b/maior*100:0)+'%';
+
+  track.appendChild(bar);
+
+  const detail=makeText(
+   'div',
+   fmt.format(p.r)+' recipientes',
+   'ranking-detail'
+  );
+
+  item.append(head,track,detail);
+  list.appendChild(item);
+ });
 }
 
 $('entrar').onclick=()=>run(async()=>{
@@ -639,26 +799,20 @@ $('entrar').onclick=()=>run(async()=>{
 
 $('sair').onclick=()=>run(async()=>{
  check(await db.auth.signOut());
+ selectedId=null;
+ people=[];
+ reads=[];
+ adjustments=[];
  await session();
  message('Sessão encerrada');
 });
 
 $('atualizar').onclick=()=>run(async()=>{
  await refresh();
- message('Dados atualizados');
+ if(productionLoaded)message('Dados atualizados');
 });
 
 $('dia').onchange=()=>run(refresh);
-
-$('busca').addEventListener('input',()=>{
- render();
-});
-
-$('limparBusca').onclick=()=>{
- $('busca').value='';
- render();
- $('busca').focus();
-};
 
 $('cadastrar').onclick=()=>run(async()=>{
  if(!admin)throw Error('Sem permissão');
@@ -685,6 +839,7 @@ $('cadastrar').onclick=()=>run(async()=>{
 
 $('registrar').onclick=()=>run(async()=>{
  if(!admin)throw Error('Sem permissão');
+ if(!productionLoaded)throw Error('Aguarde carregar a produção');
 
  if($('dia').value!==dateMS()){
   throw Error('Leituras somente na data atual');
@@ -705,6 +860,7 @@ $('registrar').onclick=()=>run(async()=>{
  }));
 
  $('leitura').value='';
+ selectedId=String(p.id);
 
  await refresh();
  $('leitura').focus();
@@ -717,35 +873,6 @@ $('leitura').addEventListener('keydown',e=>{
   e.preventDefault();
   $('registrar').click();
  }
-});
-
-$('linhas').onclick=e=>run(async()=>{
- if(!admin)return;
-
- const button=e.target.closest('button');
- if(!button)return;
-
- const id=button.dataset.adjust||button.dataset.remove;
- if(!id)return;
-
- const p=people.find(x=>String(x.id)===id);
- if(!p)return;
-
- if(button.dataset.remove){
-  if(!confirm('Desativar '+p.nome+'?'))return;
-
-  check(await db.from('colaboradores')
-   .update({ativo:false})
-   .eq('id',id));
-
-  await refresh();
-  message('Colaborador desativado');
-  return;
- }
-
- $('ajCol').value=id;
- fillAdjust();
- $('ajustes').scrollIntoView({behavior:'smooth'});
 });
 
 function calcularRecipientes(){
@@ -768,6 +895,7 @@ $('ajB').addEventListener('input',calcularRecipientes);
 
 $('salvarAj').onclick=()=>run(async()=>{
  if(!admin)throw Error('Sem permissão');
+ if(!productionLoaded)throw Error('Aguarde carregar a produção');
 
  if($('dia').value!==dateMS()){
   throw Error('Ajustes somente na data atual');
@@ -791,8 +919,6 @@ $('salvarAj').onclick=()=>run(async()=>{
 
  if(!motivo)throw Error('Informe o motivo da correção');
 
- $('ajR').value=r;
-
  check(await db.from('ajustes').insert({
   colaborador_id:id,
   usuario_id:user.id,
@@ -804,6 +930,7 @@ $('salvarAj').onclick=()=>run(async()=>{
  }));
 
  $('motivo').value='';
+ selectedId=String(id);
 
  await refresh();
 
